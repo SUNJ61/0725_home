@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityStandardAssets.Cameras;
@@ -8,6 +9,8 @@ using UnityStandardAssets.Utility;
 public class SkeletonCtrl : MonoBehaviour
 {
     [Header("ÄÄÆ÷³ÍÆ®")]
+    public Rigidbody rb;
+    public CapsuleCollider capCol;
     public Transform Skel;
     public Transform Player;
     public NavMeshAgent nav;
@@ -19,6 +22,7 @@ public class SkeletonCtrl : MonoBehaviour
     public string At = "isAttack";
     public string Tr = "isTrace";
     public string playerDie = "PlayerDie";
+    public string die_T = "dieTrigger";
     public float AttackDis = 3.0f;
     public float TraceDis = 20.0f;
 
@@ -29,6 +33,8 @@ public class SkeletonCtrl : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         Skel_D = GetComponent<SkeletonDamage>();
+        rb = GetComponent<Rigidbody>();
+        capCol = GetComponent<CapsuleCollider>();
     }
     private void OnEnable()
     {
@@ -40,6 +46,16 @@ public class SkeletonCtrl : MonoBehaviour
         {
             SkelCtrl();
             yield return new WaitForSeconds(0.3f);
+        }
+        if(Skel_D.isDie)
+        {
+            animator.SetTrigger(die_T);
+            nav.isStopped = true;
+            rb.isKinematic = true;
+            capCol.enabled = false;
+            GameManager.Instance.KillScore(1);
+            yield return new WaitForSeconds(3.0f);
+            gameObject.SetActive(false);
         }
     }
 

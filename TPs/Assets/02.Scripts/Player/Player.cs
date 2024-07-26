@@ -20,11 +20,19 @@ public class Player : MonoBehaviour
     private Transform tr;
     private Animation _animation;
 
-    private float moveSpeed = 5f;
+    [SerializeField]private float moveSpeed;
     private float rotSpeed = 90f;
     private float h, v, r;
 
     public bool isRun = false;
+    private void OnEnable()
+    {
+        GameManager.OnItemChange += UpdateSetUp; //이벤트를 등록한다. 해당 이벤트는 인벤토리의 아이템이 추가되거나 빠지면 발동.
+    }
+    void UpdateSetUp()
+    {
+        moveSpeed = GameManager.G_instance.gameData.speed;
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody>();//이와 같은 선언들을 컴퍼넌트 캐시처리라고 한다.
@@ -32,6 +40,8 @@ public class Player : MonoBehaviour
         tr = rb.GetComponent<Transform>();
         _animation = GetComponent<Animation>();
         _animation.Play(playerAnimation.idle.name); // 애니메이션 idle행동의 string 값을 전달해줌
+
+        moveSpeed = GameManager.G_instance.gameData.speed;
     }
     void Update()
     {
@@ -53,13 +63,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
-            moveSpeed = 10.0f;
+            moveSpeed = GameManager.G_instance.gameData.speed + 6f;
             _animation.CrossFade(playerAnimation.Sprint.name, 0.3f);
             isRun = true;
         }
         else if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.LeftShift))
         {
-            moveSpeed = 5.0f;
+            moveSpeed = GameManager.G_instance.gameData.speed;
             _animation.CrossFade(playerAnimation.runForward.name, 0.3f);
             isRun = false;
         }

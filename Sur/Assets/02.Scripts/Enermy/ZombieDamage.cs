@@ -27,7 +27,7 @@ public class ZombieDamage : MonoBehaviour
     public Text hpTxt;
     public int maxHp = 100;
     public int HpInit = 0; //초기값
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>(); 
         capCol = GetComponent<CapsuleCollider>();
@@ -37,7 +37,15 @@ public class ZombieDamage : MonoBehaviour
         HpInit = maxHp;
         hpBar.color = Color.green;
     }
-
+    private void OnDisable()
+    {
+        capCol.enabled = true;
+        rb.isKinematic = false; 
+        isDie = false;
+        HpInit = maxHp;
+        hpBar.color = Color.green;
+        UI_Ctrl();
+    }
     private void OnCollisionEnter(Collision col) //충돌을 감지할 때 isTrigger체크 안했을때 사용
     {
         if(col.gameObject.CompareTag(playerTag)) //col.gameObject.CompareTag == "Player"은 동적할당과 비교를 동시에 실행, 런타임에서 할일이 많음 메모리, 속도등 다양한 방면에서 불리함.
@@ -50,18 +58,24 @@ public class ZombieDamage : MonoBehaviour
         {
             HitInfo(col);
             HpInit -= col.gameObject.GetComponent<BulletCtrl>().damage; //같은 오브젝트 안에있는 총알 스크립트에 데미지 변수를 가져온다.
-            hpBar.fillAmount = (float)HpInit/(float)maxHp; //fillAmount는 플롯값만 받는다.
-            hpTxt.text = $"Hp : <color=#ff0000>{HpInit.ToString()}</color>";
-            if (hpBar.fillAmount <= 0.3f)
-                hpBar.color = Color.red;
-            else if (hpBar.fillAmount <=0.5f)
-                hpBar.color = Color.yellow;
+            UI_Ctrl();
 
             if (++hitCount == 5)
             {
-                Zombie_Die();
+                if (!isDie)
+                    Die();
             }
         }
+    }
+
+    private void UI_Ctrl()
+    {
+        hpBar.fillAmount = (float)HpInit / (float)maxHp; //fillAmount는 플롯값만 받는다.
+        hpTxt.text = $"Hp : <color=#ff0000>{HpInit.ToString()}</color>";
+        if (hpBar.fillAmount <= 0.3f)
+            hpBar.color = Color.red;
+        else if (hpBar.fillAmount <= 0.5f)
+            hpBar.color = Color.yellow;
     }
 
     private void HitInfo(Collision col)
@@ -86,16 +100,20 @@ public class ZombieDamage : MonoBehaviour
         rb.mass = 75f;
     }
 
-    void Zombie_Die()
+    void Die()
     {
-        animator.SetTrigger(dieTrigger);
-        capCol.enabled = false; //콜라이더 비활성화
-        rb.isKinematic = true; //오브젝트의 물리력을 제거함.
+        //animator.SetTrigger(dieTrigger);
+        //capCol.enabled = false; //콜라이더 비활성화
+        //rb.isKinematic = true; //오브젝트의 물리력을 제거함.
         isDie = true;
-        GameManager.Instance.KillScore(1);
-        Destroy(gameObject, 5.0f);
+        //GameManager.Instance.KillScore(1);
+        //gameObject.SetActive(false);
     }
-
+    void ExpHp()
+    {
+        HpInit = 0;
+        UI_Ctrl();
+    }
     public void BoxColEnable()
     {
         BoxCol.enabled = true;

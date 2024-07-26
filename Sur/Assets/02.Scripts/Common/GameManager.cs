@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
         //Spawn_Zom();
         //Spawn_Mon();
         //Spawn_Skel();
-        Spawn_Mob();
+        //Spawn_Mob();//풀링매니저에 몹 스폰으로 대체
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OnPaused();

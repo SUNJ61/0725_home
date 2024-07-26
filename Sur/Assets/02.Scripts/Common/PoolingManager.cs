@@ -5,7 +5,8 @@ using UnityEngine;
 public class PoolingManager : MonoBehaviour
 {
     public static PoolingManager P_instance;
-
+    private FPS_Damage Player;
+    
     public GameObject Bullet;
     public List<GameObject> BulletList;
     private int bulletMax = 10;
@@ -15,6 +16,10 @@ public class PoolingManager : MonoBehaviour
     public List<GameObject> EnemyList;
     private int MaxEnemy = 10;
     private string EnemyFile = "Enemy";
+
+    public List<Transform> SpawnList;
+    private float SpawnTime = 3.0f;
+    private string SP = "SpawnPoints";
     void Awake()
     {
         if(P_instance == null)
@@ -25,8 +30,42 @@ public class PoolingManager : MonoBehaviour
 
         Bullet =  Resources.Load(BulletStr) as GameObject;
         EnemyPrefabs = Resources.LoadAll<GameObject>(EnemyFile);
+        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<FPS_Damage>();
         SpawnBullet();
         SpawnEnemy();
+    }
+    private void Start()
+    {
+        var spawnPoint = GameObject.Find(SP);
+        if (spawnPoint != null)
+            spawnPoint.GetComponentsInChildren<Transform>(SpawnList);
+
+        SpawnList.RemoveAt(0);
+        if (SpawnList.Count > 0)
+        {
+            StartCoroutine(CreatMob());
+        }
+    }
+    IEnumerator CreatMob()
+    {
+        while(!Player.isPlayerDie)
+        {
+            yield return new WaitForSeconds(SpawnTime);
+            if(Player.isPlayerDie) yield break;
+            foreach (GameObject Mob in EnemyList)
+            {
+                if(Mob.activeSelf == false)
+                {
+                    int idx = Random.Range(0, SpawnList.Count);
+                    Mob.transform.position = SpawnList[idx].position;
+                    Mob.transform.rotation = SpawnList[idx].rotation;
+                    Mob.gameObject.SetActive(true);
+
+
+                    break;
+                }
+            }
+        }
     }
     void SpawnBullet()
     {

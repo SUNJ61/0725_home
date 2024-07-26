@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,12 +12,15 @@ public class Zombie : MonoBehaviour
     public Transform thisZombie; 
     public Animator animator;
     public ZombieDamage zombieDamage;
+    public Rigidbody rb;
+    public CapsuleCollider capCol;
 
     [Header("관련 변수")]
     public float attackDist = 3.0f; //공격 범위
     public float traceDist = 20f; //추적 범위
 
     public string playerDie = "PlayerDie";
+    public string dieTrigger = "DieTrigger";
     void Awake()
     {
         agent = this.gameObject.GetComponent<NavMeshAgent>(); //자기자신 오브젝트에 안에 있는 nav컴퍼넌트를 적용시킨다.
@@ -24,20 +28,33 @@ public class Zombie : MonoBehaviour
         Player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         //하이라키안에 있는 게임오브젝트의 태그를 읽어서 가져온다. GetComponent<Transform>()는 transform으로 줄여 쓸 수 있다.
         animator = GetComponent<Animator>();//자기자신 오브젝트에서 컴포넌트를 가져올때 this.gameObject 생략가능
+        rb = GetComponent<Rigidbody>();
+        capCol = GetComponent<CapsuleCollider>();
         zombieDamage = GetComponent<ZombieDamage>();
     }
     private void OnEnable()
     {
-        StartCoroutine(MonsterAI());
+        StartCoroutine(ZomAI());
     }
-    IEnumerator MonsterAI()
+    IEnumerator ZomAI()
     {
         while(!(zombieDamage.isDie || Player.GetComponent<FPS_Damage>().isPlayerDie))
         {
             ZomCtrl();
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.1f);
+        }
+        if(zombieDamage.isDie)
+        {
+            animator.SetTrigger(dieTrigger);
+            agent.isStopped = true;
+            capCol.enabled = false;
+            rb.isKinematic = true;
+            GameManager.Instance.KillScore(1);
+            yield return new WaitForSeconds(3.0f);
+            gameObject.SetActive(false);
         }
     }
+
     //void Update()
     //{
     //    if (zombieDamage.isDie || Player.GetComponent<FPS_Damage>().isPlayerDie) return; //하위로직으로 내려가지않고 함수가 종료된다 즉, 업데이트가 종료됨

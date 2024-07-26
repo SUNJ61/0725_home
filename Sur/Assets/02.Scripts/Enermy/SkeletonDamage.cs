@@ -28,7 +28,7 @@ public class SkeletonDamage : MonoBehaviour
     [Header("UI")]
     public Image hp_image;
     public Text hp_text;
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         capCol = GetComponent<CapsuleCollider>();
@@ -39,7 +39,15 @@ public class SkeletonDamage : MonoBehaviour
         hp_image.color = Color.green;
         Inithp = Mhp;
     }
-
+    private void OnDisable()
+    {
+        capCol.enabled = true;
+        rb.isKinematic = false;
+        isDie = false;
+        Inithp = Mhp;
+        UI_Ctrl();
+        hp_image.color = Color.green;
+    }
     private void OnCollisionEnter(Collision col)
     {
         if(col.gameObject.CompareTag(Player))
@@ -57,7 +65,8 @@ public class SkeletonDamage : MonoBehaviour
 
             if (Inithp <= 0)
             {
-                Die_fc();
+                if (!isDie)
+                    Die();
             }
         }
     }
@@ -72,16 +81,20 @@ public class SkeletonDamage : MonoBehaviour
             hp_image.color = Color.yellow;
     }
 
-    private void Die_fc()
+    private void Die()
     {
-        animator.SetTrigger(die_T);
-        rb.isKinematic = true;
-        capCol.enabled = false;
+        //animator.SetTrigger(die_T);
+        //rb.isKinematic = true;
+        //capCol.enabled = false;
         isDie = true;
-        GameManager.Instance.KillScore(1);
-        Destroy(gameObject, 5.0f);
+        //GameManager.Instance.KillScore(1);
+        //gameObject.SetActive(false);
     }
-
+    void ExpHp()
+    {
+        Inithp = 0;
+        UI_Ctrl();
+    }
     private void HitInfo(Collision col)
     {
         //Destroy(col.gameObject);

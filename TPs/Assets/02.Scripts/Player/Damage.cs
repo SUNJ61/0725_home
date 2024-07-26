@@ -16,16 +16,24 @@ public class Damage : MonoBehaviour
     private readonly string BLDeffStr = "Effects/BulletImpactFleshBigEffect";
     private readonly string UIObj = "Canvas_UI";
 
-    private float Hp = 0f;
-    private float maxHp = 100f;
+    private float curHp = 0f;
+    [SerializeField]private float InitHp;
     public delegate void PlayerDieHandler();
     public static event PlayerDieHandler OnPlayerDie;//static을 달아서 class안에서만 사용하는 것이 아닌 외부에서도 사용할 수 있도록 한다.
-
+    private void OnEnable()
+    {
+        GameManager.OnItemChange += UpdateSetUp; //아이템이 추가 or 빠질 때 발동 된다.
+    }
+    void UpdateSetUp()
+    {
+        InitHp = GameManager.G_instance.gameData.hp;
+        curHp += GameManager.G_instance.gameData.hp - curHp;
+    }
     void Start()
     {
         BLDeff = Resources.Load<GameObject>(BLDeffStr);
-        Hp = Mathf.Clamp(Hp, 0f, maxHp);
-        Hp = maxHp;
+        InitHp = GameManager.G_instance.gameData.hp;
+        curHp = InitHp;
 
         BloodScreen =GameObject.Find(UIObj).transform.GetChild(0).GetComponent<Image>();
         Hpbar = GameObject.Find(UIObj).transform.GetChild(2).GetChild(2).GetComponent<Image>();
@@ -37,10 +45,11 @@ public class Damage : MonoBehaviour
         if(col.gameObject.CompareTag(e_bullettag) || col.gameObject.CompareTag(s_bullettag))
         {
             col.gameObject.SetActive(false);
-            Hp -= 5;
+            curHp = Mathf.Clamp(curHp, 0f, InitHp);
+            curHp -= 5;
             ShowBLD_Eff(col);
             HpBarCtrl();
-            if (Hp <= 0f)
+            if (curHp <= 0f)
             {
                 PlayerDie();
             }
@@ -50,10 +59,10 @@ public class Damage : MonoBehaviour
 
     private void HpBarCtrl()
     {
-        Hpbar.fillAmount = (float)Hp / (float)maxHp;
-        if (Hp <= 30f)
+        Hpbar.fillAmount = (float)curHp / (float)InitHp;
+        if (curHp <= 30f)
             Hpbar.color = Color.red;
-        else if (Hp <= 50f)
+        else if (curHp <= 50f)
             Hpbar.color = Color.yellow;
         else
             Hpbar.color = Color.green;

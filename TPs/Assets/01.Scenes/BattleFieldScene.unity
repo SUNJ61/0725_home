@@ -2557,8 +2557,9 @@ GameObject:
   - component: {fileID: 504871219}
   - component: {fileID: 504871221}
   - component: {fileID: 504871220}
-  - component: {fileID: 504871222}
   - component: {fileID: 504871223}
+  - component: {fileID: 504871222}
+  - component: {fileID: 504871224}
   m_Layer: 5
   m_Name: ItemHp
   m_TagString: Untagged
@@ -2648,6 +2649,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &504871224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504871218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489f92240cb3a314e97a3e9229300c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData:
+    itemType: 0
+    itemCalc: 0
+    name: HP_UP
+    desc: Increase+10_HP
+    value: 10
 --- !u!1 &530754166
 GameObject:
   m_ObjectHideFlags: 0
@@ -4005,8 +4024,9 @@ GameObject:
   - component: {fileID: 928407901}
   - component: {fileID: 928407903}
   - component: {fileID: 928407902}
-  - component: {fileID: 928407904}
   - component: {fileID: 928407905}
+  - component: {fileID: 928407904}
+  - component: {fileID: 928407906}
   m_Layer: 5
   m_Name: ItemGrenade
   m_TagString: Untagged
@@ -4096,6 +4116,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &928407906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928407900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489f92240cb3a314e97a3e9229300c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData:
+    itemType: 2
+    itemCalc: 0
+    name: Granade_UP
+    desc: Increase+2_Granade
+    value: 2
 --- !u!1 &936854243
 GameObject:
   m_ObjectHideFlags: 0
@@ -4687,8 +4725,9 @@ GameObject:
   - component: {fileID: 1048197486}
   - component: {fileID: 1048197488}
   - component: {fileID: 1048197487}
-  - component: {fileID: 1048197489}
   - component: {fileID: 1048197490}
+  - component: {fileID: 1048197489}
+  - component: {fileID: 1048197491}
   m_Layer: 5
   m_Name: ItemSpeed
   m_TagString: Untagged
@@ -4778,6 +4817,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1048197491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048197485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489f92240cb3a314e97a3e9229300c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData:
+    itemType: 1
+    itemCalc: 1
+    name: Speed_UP
+    desc: Increase+10%_Speed
+    value: 0.1
 --- !u!1 &1055142322
 GameObject:
   m_ObjectHideFlags: 0
@@ -5098,6 +5155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1233735614}
   - component: {fileID: 1233735613}
+  - component: {fileID: 1233735615}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5119,6 +5177,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGameOver: 0
   isInvenopen: 0
+  gameData:
+    KillCount: 0
+    hp: 120
+    damage: 25
+    speed: 6
+    equipItem: []
+  slotList: {fileID: 10678069}
+  itemObjects:
+  - {fileID: 504871218}
+  - {fileID: 1048197485}
+  - {fileID: 928407900}
+  - {fileID: 1569790356}
 --- !u!4 &1233735614
 Transform:
   m_ObjectHideFlags: 0
@@ -5134,6 +5204,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1233735615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233735612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1ad6451dc2c4a499ac95a50c3f8b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataPath: 
 --- !u!1 &1261250613
 GameObject:
   m_ObjectHideFlags: 0
@@ -6418,8 +6501,9 @@ GameObject:
   - component: {fileID: 1569790357}
   - component: {fileID: 1569790359}
   - component: {fileID: 1569790358}
-  - component: {fileID: 1569790360}
   - component: {fileID: 1569790361}
+  - component: {fileID: 1569790360}
+  - component: {fileID: 1569790362}
   m_Layer: 5
   m_Name: ItemShock
   m_TagString: Untagged
@@ -6509,6 +6593,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1569790362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569790356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489f92240cb3a314e97a3e9229300c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData:
+    itemType: 3
+    itemCalc: 1
+    name: Damage_UP
+    desc: Increase+5%_Damage
+    value: 0.05
 --- !u!1 &1604063446
 GameObject:
   m_ObjectHideFlags: 0
@@ -7336,6 +7438,7 @@ MonoBehaviour:
     runLeft: {fileID: 7400000, guid: 268781a61383b42a98eeda538dfa52e9, type: 2}
     runRight: {fileID: 7400000, guid: f65e8694646404294b2de66b5827d6e5, type: 2}
     Sprint: {fileID: 7400000, guid: 52726528637b14f8586ef4583b34b790, type: 2}
+  moveSpeed: 5
   isRun: 0
 --- !u!114 &1905079802
 MonoBehaviour:
@@ -7494,6 +7597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 580c2b4ca8761b9438345b3a756ea167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InitHp: 0
 --- !u!1 &1946411022
 GameObject:
   m_ObjectHideFlags: 0

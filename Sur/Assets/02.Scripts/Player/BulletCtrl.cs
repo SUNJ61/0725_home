@@ -16,7 +16,6 @@ public class BulletCtrl : MonoBehaviour
         tr = GetComponent<Transform>();
         trail = GetComponent<TrailRenderer>();
         //Destroy(this.gameObject, 3.0f); // 자기자신의 오브젝트를 3초후에 메모리에서 삭제한다, 오브젝트 풀링으로 비활성화
-        Invoke("DisableBullet", 2.0f);
     }
     private void DisableBullet()
     {
@@ -26,6 +25,7 @@ public class BulletCtrl : MonoBehaviour
     private void OnEnable()
     {
         rb.AddForce(transform.forward * Speed); //transform.forward(로컬 좌표)로 스피드 만큼 나간다.
+        Invoke("DisableBullet", 2.0f);
     }
 
     private void OnDisable()

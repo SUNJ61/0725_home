@@ -41,6 +41,10 @@ public class Drag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         if(ItemTr.parent == inventoryTr) //드래그한 아이템의 부모가 인벤토리일때, 즉 드래그가 끝났을 때 슬롯에 넣지 못하였을 경우
         {
             ItemTr.SetParent(ItemList);//드래그한 아이템의 부모를 아이템 리스트로 설정한다. 다시 아이템 리스트로 돌아간다.
+            GameManager.G_instance.RemoveItem(GetComponent<ItemInfo>().itemData);
+            //슬롯에 있는 아이템을 뺏을 경우 게임매니저에있는 RemoveItem함수를 불러온다.
+            //RemoveItem함수에는 현재 드래그 중인 아이템의 정보를 itemData에 담아서 전달한다.
+            //itemData는 GameData의 Item클래스의 형태의 변수이다.
         }
     }
 }

@@ -25,7 +25,7 @@ public class MonsterDamage : MonoBehaviour
     public int Maxhp = 100;
     public int Inithp = 0;
 
-    void Start()
+    void Awake()
     {
         capsule = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
@@ -35,7 +35,15 @@ public class MonsterDamage : MonoBehaviour
         Inithp = Maxhp;
         hpbar.color = Color.green;
     }
-
+    private void OnDisable()
+    {
+        capsule.enabled = true;
+        rb.isKinematic = false;
+        isDie = false;
+        Inithp = Maxhp;
+        hpbar.color = Color.green;
+        UI_Ctrl();
+    }
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.CompareTag(player))
@@ -49,19 +57,24 @@ public class MonsterDamage : MonoBehaviour
             hitInfo(col);
 
             Inithp -= col.gameObject.GetComponent<BulletCtrl>().damage;
-            hpbar.fillAmount = (float)Inithp / (float)Maxhp;
-            hptext.text = $"HP : <color=#ff0000>{Inithp.ToString()}</color>";
-
-            if (hpbar.fillAmount <= 0.3f)
-                hpbar.color = Color.red;
-            else if(hpbar.fillAmount <= 0.5f)
-                hpbar.color = Color.yellow;
+            UI_Ctrl();
 
             if (Inithp <= 0)
             {
-                Monster_Die();
+                if (!isDie)
+                    Die();
             }
         }
+    }
+
+    private void UI_Ctrl()
+    {
+        hpbar.fillAmount = (float)Inithp / (float)Maxhp;
+        hptext.text = $"HP : <color=#ff0000>{Inithp.ToString()}</color>";
+        if (hpbar.fillAmount <= 0.3f)
+            hpbar.color = Color.red;
+        else if (hpbar.fillAmount <= 0.5f)
+            hpbar.color = Color.yellow;
     }
 
     private void hitInfo(Collision col)
@@ -77,14 +90,19 @@ public class MonsterDamage : MonoBehaviour
         Destroy(blood, Random.Range(0.8f, 1.2f));
     }
 
-    void Monster_Die()
+    void Die()
     {
-        animator.SetTrigger(dieTrigger);
-        capsule.enabled = false;
-        rb.isKinematic = true;
+        //animator.SetTrigger(dieTrigger);
+        //capsule.enabled = false;
+        //rb.isKinematic = true;
         isDie = true;
-        GameManager.Instance.KillScore(1);
-        Destroy(gameObject,5.0f);
+        //GameManager.Instance.KillScore(1);
+        //gameObject.SetActive(false);
+    }
+    void ExpHp()
+    {
+        Inithp = 0;
+        UI_Ctrl();
     }
 
     public void BoxColEnable()

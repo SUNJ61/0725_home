@@ -23,8 +23,14 @@ public class Bullet : MonoBehaviour
     }
     private void OnEnable() //오브젝트가 켜졌을 때 발동 되는 함수
     {
+        Damage = GameManager.G_instance.gameData.damage;
+        GameManager.OnItemChange += UpdateSetUp; //인벤토리에서 아이템이 넣고 빠질 때 발동한다.
         rb.AddForce(tr.forward * Speed);
         Invoke("BulletDisable", 2.0f); //2초동안 오브젝트가 변화가 없을 경우 강제로 오브젝트를 끈다.
+    }
+    void UpdateSetUp()
+    {
+        Damage = GameManager.G_instance.gameData.damage;
     }
     private void OnDisable()
     {

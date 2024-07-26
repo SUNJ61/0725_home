@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,12 +12,15 @@ public class MonsterCtrl : MonoBehaviour
     public Transform thisMonster;
     public Animator animator;
     public MonsterDamage monsterDamage;
+    public CapsuleCollider capsule;
+    public Rigidbody rb;
 
     [Header("관련 변수")]
     public float traceDis = 20.0f;
     public float attackDis = 3.0f;
 
     public string playerDie = "PlayerDie";
+    public string dieTrigger = "DieTrigger";
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -24,6 +28,8 @@ public class MonsterCtrl : MonoBehaviour
         thisMonster = transform;
         animator = GetComponent<Animator>();
         monsterDamage = GetComponent<MonsterDamage>();
+        capsule = GetComponent<CapsuleCollider>();
+        rb = GetComponent<Rigidbody>();
     }
     private void OnEnable()
     {
@@ -34,7 +40,17 @@ public class MonsterCtrl : MonoBehaviour
         while (!(monsterDamage.isDie || Player.GetComponent<FPS_Damage>().isPlayerDie))
         {
             MonCtrl();
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.2f);
+        }
+        if(monsterDamage.isDie)
+        {
+            animator.SetTrigger(dieTrigger);
+            agent.isStopped = true;
+            capsule.enabled = false;
+            rb.isKinematic = true;
+            GameManager.Instance.KillScore(1);
+            yield return new WaitForSeconds(3.0f);
+            gameObject.SetActive(false);
         }
     }
 
